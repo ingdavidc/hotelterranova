@@ -250,7 +250,10 @@ export default function App() {
         </div>
         <div className="footer__bottom">
           <p>&copy; {new Date().getFullYear()} Hotel Terranova Saravena. Todos los derechos reservados.</p>
-          <div className="footer__socials">
+          <div className="footer__socials" style={{ alignItems: 'center' }}>
+            <a href="/admin" style={{ color: 'var(--color-primary)', marginRight: '1rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <LucideIcons.Lock size={16} /> Panel Admin
+            </a>
             <a href="#">Facebook</a>
             <a href="#">Instagram</a>
           </div>
