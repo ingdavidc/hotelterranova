@@ -8,7 +8,7 @@ export const SiteContentProvider = ({ children }) => {
   const [heroContent, setHeroContent] = useState({
     title: 'Descubre el Corazón\nde Saravena',
     subtitle: 'Confort, elegancia y la mejor atención en la puerta de entrada al piedemonte llanero de Arauca.',
-    backgroundImage: 'https://images.unsplash.com/photo-1542314831-c6a4d14d8373?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
+    backgroundImage: '/hotel.jpg'
   });
 
   const [aboutContent, setAboutContent] = useState({
