@@ -1,0 +1,369 @@
+import React, { useState, useEffect } from 'react';
+import { Calendar, Users, MapPin, Wifi, Coffee, Wind, Car, ChevronRight, Menu, X, Star } from 'lucide-react';
+
+// Estilos CSS adicionales para la animación del logo
+const extraStyles = `
+  @keyframes subtle-pulse {
+    0% { transform: scale(1); filter: brightness(1); drop-shadow: 0 0 0px rgba(249, 115, 22, 0); }
+    50% { transform: scale(1.02); filter: brightness(1.1); drop-shadow: 0 0 8px rgba(249, 115, 22, 0.4); }
+    100% { transform: scale(1); filter: brightness(1); drop-shadow: 0 0 0px rgba(249, 115, 22, 0); }
+  }
+  .animate-logo-pulse {
+    animation: subtle-pulse 3s infinite ease-in-out;
+  }
+`;
+
+export default function App() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Efecto para cambiar el color del header al hacer scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    
+    // Inyectar los estilos de animación al montar el componente
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = extraStyles;
+    document.head.appendChild(styleSheet);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      document.head.removeChild(styleSheet);
+    };
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-stone-50 font-sans text-stone-800 selection:bg-orange-500 selection:text-white">
+      
+      {/* HEADER / NAVEGACIÓN */}
+      <header 
+        className={`fixed w-full z-50 transition-all duration-300 ${
+          isScrolled ? 'bg-[#111111] shadow-lg py-3' : 'bg-transparent py-5'
+        }`}
+      >
+        <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center">
+          {/* Logo (Imagen real con animación) */}
+          <div className="flex items-center cursor-pointer">
+            <img 
+              src="Logo Terranova Final.jpg" 
+              alt="Hotel Terranova Logo" 
+              className={`h-16 md:h-20 w-auto rounded-full object-cover transition-all duration-300 animate-logo-pulse ${
+                 isScrolled ? 'border-2 border-stone-800' : 'border-2 border-transparent shadow-lg'
+              }`}
+            />
+          </div>
+
+          {/* Menú Desktop */}
+          <nav className="hidden md:flex gap-8 items-center text-sm uppercase tracking-wider font-semibold">
+            <a href="#el-hotel" className={`${isScrolled ? 'text-gray-300 hover:text-orange-500' : 'text-white/90 hover:text-white'} transition-colors`}>El Hotel</a>
+            <a href="#habitaciones" className={`${isScrolled ? 'text-gray-300 hover:text-orange-500' : 'text-white/90 hover:text-white'} transition-colors`}>Habitaciones</a>
+            <a href="#servicios" className={`${isScrolled ? 'text-gray-300 hover:text-orange-500' : 'text-white/90 hover:text-white'} transition-colors`}>Servicios</a>
+            <a href="#contacto" className={`${isScrolled ? 'text-gray-300 hover:text-orange-500' : 'text-white/90 hover:text-white'} transition-colors`}>Contacto</a>
+            <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-sm transition-colors duration-300 shadow-lg">
+              Reservar
+            </button>
+          </nav>
+
+          {/* Botón Menú Móvil */}
+          <button 
+            className="md:hidden text-white"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+
+        {/* Menú Móvil Desplegable */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 w-full bg-[#111111] border-t border-stone-800 py-4 flex flex-col items-center gap-4 shadow-xl">
+            <a href="#el-hotel" className="text-gray-300 hover:text-orange-500 w-full text-center py-2">El Hotel</a>
+            <a href="#habitaciones" className="text-gray-300 hover:text-orange-500 w-full text-center py-2">Habitaciones</a>
+            <a href="#servicios" className="text-gray-300 hover:text-orange-500 w-full text-center py-2">Servicios</a>
+            <button className="bg-orange-500 text-white w-3/4 py-3 rounded-sm mt-2 font-semibold">
+              Reservar Ahora
+            </button>
+          </div>
+        )}
+      </header>
+
+      {/* HERO SECTION */}
+      <section className="relative h-screen flex items-center justify-center">
+        {/* Imagen de fondo (Foto real del hotel) */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: 'url("WhatsApp Image 2026-06-06 at 9.56.03 AM.jpeg")' }}
+        >
+          {/* Overlay oscuro para legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-[#111111]"></div>
+        </div>
+
+        <div className="relative z-10 text-center px-4 mt-20">
+          <div className="flex justify-center mb-4">
+             <Star className="text-orange-500 mx-1" size={20} fill="currentColor"/>
+             <Star className="text-orange-500 mx-1" size={20} fill="currentColor"/>
+             <Star className="text-orange-500 mx-1" size={20} fill="currentColor"/>
+             <Star className="text-orange-500 mx-1" size={20} fill="currentColor"/>
+          </div>
+          <h1 className="font-serif text-5xl md:text-7xl text-white mb-6 drop-shadow-lg">
+            Descubre el Corazón <br/> de Saravena
+          </h1>
+          <p className="text-lg md:text-xl text-gray-200 font-light max-w-2xl mx-auto mb-10">
+            Confort, elegancia y la mejor atención en la puerta de entrada al piedemonte llanero de Arauca.
+          </p>
+        </div>
+
+        {/* BARRA DE RESERVA RÁPIDA (Flotante) */}
+        <div className="absolute -bottom-16 left-0 right-0 z-20 flex justify-center px-4">
+          <div className="bg-white rounded-lg shadow-2xl p-4 md:p-6 flex flex-col md:flex-row gap-4 w-full max-w-5xl items-end border-t-4 border-orange-500">
+            
+            <div className="w-full md:w-1/4">
+              <label className="block text-xs font-bold text-stone-500 uppercase mb-1">Llegada</label>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-3 text-stone-400" size={20} />
+                <input type="date" className="w-full bg-stone-50 border border-stone-200 text-stone-800 rounded-sm py-2 pl-10 pr-3 focus:outline-none focus:ring-1 focus:ring-orange-500" />
+              </div>
+            </div>
+
+            <div className="w-full md:w-1/4">
+              <label className="block text-xs font-bold text-stone-500 uppercase mb-1">Salida</label>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-3 text-stone-400" size={20} />
+                <input type="date" className="w-full bg-stone-50 border border-stone-200 text-stone-800 rounded-sm py-2 pl-10 pr-3 focus:outline-none focus:ring-1 focus:ring-orange-500" />
+              </div>
+            </div>
+
+            <div className="w-full md:w-1/4">
+              <label className="block text-xs font-bold text-stone-500 uppercase mb-1">Huéspedes</label>
+              <div className="relative">
+                <Users className="absolute left-3 top-3 text-stone-400" size={20} />
+                <select className="w-full bg-stone-50 border border-stone-200 text-stone-800 rounded-sm py-2.5 pl-10 pr-3 focus:outline-none focus:ring-1 focus:ring-orange-500 appearance-none">
+                  <option>1 Adulto</option>
+                  <option>2 Adultos</option>
+                  <option>2 Adultos, 1 Niño</option>
+                  <option>2 Adultos, 2 Niños</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="w-full md:w-1/4">
+              <button className="w-full bg-[#111111] hover:bg-stone-800 text-white font-semibold py-3 rounded-sm transition-colors flex justify-center items-center gap-2">
+                Ver Disponibilidad
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN SOBRE NOSOTROS */}
+      <section id="el-hotel" className="py-32 px-6 md:px-12 bg-white">
+        <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-center gap-16">
+          <div className="md:w-1/2">
+            <h4 className="text-orange-500 font-bold uppercase tracking-widest text-sm mb-4">Bienvenidos a Terranova</h4>
+            <h2 className="font-serif text-4xl text-stone-900 mb-6 leading-tight">
+              Un oasis de tranquilidad en el departamento de Arauca
+            </h2>
+            <p className="text-stone-600 mb-6 leading-relaxed">
+              Diseñado pensando en la comodidad del viajero moderno y de negocios. El Hotel Terranova se erige como la opción más prestigiosa en Saravena, combinando una arquitectura moderna con el cálido servicio que caracteriza a nuestra región.
+            </p>
+            <p className="text-stone-600 mb-8 leading-relaxed">
+              Ya sea que nos visite por negocios o para explorar la riqueza natural del piedemonte llanero, nuestras instalaciones están preparadas para hacer de su estancia una experiencia inolvidable.
+            </p>
+            <button className="flex items-center gap-2 text-[#111111] font-semibold hover:text-orange-500 transition-colors border-b-2 border-orange-500 pb-1">
+              Conoce nuestra historia <ChevronRight size={18} />
+            </button>
+          </div>
+          <div className="md:w-1/2 relative">
+            <div className="absolute inset-0 bg-green-800/10 translate-x-4 translate-y-4 rounded-lg"></div>
+            <img 
+              src="https://images.unsplash.com/photo-1566073171526-87f91766cc19?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+              alt="Recepción Hotel Terranova" 
+              className="relative z-10 w-full h-auto object-cover rounded-lg shadow-xl"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN HABITACIONES */}
+      <section id="habitaciones" className="py-24 px-6 md:px-12 bg-stone-100">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-16">
+            <h4 className="text-green-800 font-bold uppercase tracking-widest text-sm mb-2">Nuestros Espacios</h4>
+            <h2 className="font-serif text-4xl text-stone-900">Habitaciones & Suites</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Tarjeta Habitación 1 */}
+            <div className="bg-white rounded-lg overflow-hidden shadow-md group hover:shadow-2xl transition-shadow duration-300">
+              <div className="relative h-64 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Habitación Estándar" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute top-4 right-4 bg-white/90 px-3 py-1 text-sm font-semibold text-stone-800 rounded-sm">Desde $120.000 COP</div>
+              </div>
+              <div className="p-6">
+                <h3 className="font-serif text-2xl text-stone-900 mb-2">Habitación Estándar</h3>
+                <p className="text-stone-600 mb-4 text-sm">Perfecta para el viajero de negocios. Equipada con cama doble, escritorio de trabajo y aire acondicionado silencioso.</p>
+                <div className="flex gap-3 mb-6 text-stone-400">
+                  <Wind size={18} />
+                  <Wifi size={18} />
+                  <Coffee size={18} />
+                </div>
+                <button className="w-full border border-stone-300 hover:border-orange-500 hover:bg-orange-500 hover:text-white text-stone-800 font-semibold py-2 rounded-sm transition-colors">
+                  Ver Detalles
+                </button>
+              </div>
+            </div>
+
+            {/* Tarjeta Habitación 2 */}
+            <div className="bg-white rounded-lg overflow-hidden shadow-md group hover:shadow-2xl transition-shadow duration-300 relative border-b-4 border-orange-500">
+              <div className="absolute top-0 left-0 bg-orange-500 text-white text-xs font-bold px-3 py-1 z-10 uppercase tracking-wider">Más Popular</div>
+              <div className="relative h-64 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Habitación Doble Superior" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute top-4 right-4 bg-white/90 px-3 py-1 text-sm font-semibold text-stone-800 rounded-sm">Desde $180.000 COP</div>
+              </div>
+              <div className="p-6">
+                <h3 className="font-serif text-2xl text-stone-900 mb-2">Doble Superior</h3>
+                <p className="text-stone-600 mb-4 text-sm">Amplitud y confort para parejas o compañeros. Dos camas semi-dobles, zona de estar y vistas a la ciudad.</p>
+                <div className="flex gap-3 mb-6 text-stone-400">
+                  <Wind size={18} />
+                  <Wifi size={18} />
+                  <Coffee size={18} />
+                </div>
+                <button className="w-full border border-stone-300 hover:border-orange-500 hover:bg-orange-500 hover:text-white text-stone-800 font-semibold py-2 rounded-sm transition-colors">
+                  Ver Detalles
+                </button>
+              </div>
+            </div>
+
+            {/* Tarjeta Habitación 3 */}
+            <div className="bg-white rounded-lg overflow-hidden shadow-md group hover:shadow-2xl transition-shadow duration-300">
+              <div className="relative h-64 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Suite Terranova" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute top-4 right-4 bg-white/90 px-3 py-1 text-sm font-semibold text-stone-800 rounded-sm">Desde $280.000 COP</div>
+              </div>
+              <div className="p-6">
+                <h3 className="font-serif text-2xl text-stone-900 mb-2">Suite Terranova</h3>
+                <p className="text-stone-600 mb-4 text-sm">La experiencia definitiva. Cama King size, sala de estar independiente, minibar premium y balcón privado.</p>
+                <div className="flex gap-3 mb-6 text-stone-400">
+                  <Wind size={18} />
+                  <Wifi size={18} />
+                  <Coffee size={18} />
+                </div>
+                <button className="w-full border border-stone-300 hover:border-orange-500 hover:bg-orange-500 hover:text-white text-stone-800 font-semibold py-2 rounded-sm transition-colors">
+                  Ver Detalles
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN SERVICIOS */}
+      <section id="servicios" className="py-24 px-6 md:px-12 bg-[#111111] text-white">
+        <div className="container mx-auto max-w-6xl">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16">
+            <div>
+              <h4 className="text-orange-500 font-bold uppercase tracking-widest text-sm mb-2">Comodidades</h4>
+              <h2 className="font-serif text-4xl text-white">Pensado para tu confort</h2>
+            </div>
+            <p className="text-gray-400 max-w-md mt-4 md:mt-0">
+              En Saravena el clima exige los mejores estándares. Por eso nuestras instalaciones están dotadas para que no te falte nada.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="border border-stone-800 p-8 rounded-lg text-center hover:border-orange-500 transition-colors group">
+              <Wind className="mx-auto text-green-600 group-hover:text-orange-500 transition-colors mb-4" size={40} />
+              <h3 className="font-semibold mb-2">Aire Acondicionado</h3>
+              <p className="text-sm text-gray-400">Climatización silenciosa en todas las áreas.</p>
+            </div>
+            <div className="border border-stone-800 p-8 rounded-lg text-center hover:border-orange-500 transition-colors group">
+              <Wifi className="mx-auto text-green-600 group-hover:text-orange-500 transition-colors mb-4" size={40} />
+              <h3 className="font-semibold mb-2">Wi-Fi de Alta Velocidad</h3>
+              <p className="text-sm text-gray-400">Conexión estable por fibra óptica gratuita.</p>
+            </div>
+            <div className="border border-stone-800 p-8 rounded-lg text-center hover:border-orange-500 transition-colors group">
+              <Car className="mx-auto text-green-600 group-hover:text-orange-500 transition-colors mb-4" size={40} />
+              <h3 className="font-semibold mb-2">Parqueadero Privado</h3>
+              <p className="text-sm text-gray-400">Vigilancia 24/7 exclusiva para nuestros huéspedes.</p>
+            </div>
+            <div className="border border-stone-800 p-8 rounded-lg text-center hover:border-orange-500 transition-colors group">
+              <Coffee className="mx-auto text-green-600 group-hover:text-orange-500 transition-colors mb-4" size={40} />
+              <h3 className="font-semibold mb-2">Desayuno Incluido</h3>
+              <p className="text-sm text-gray-400">Opciones típicas llaneras y continentales.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer id="contacto" className="bg-[#0a0a0a] text-gray-300 py-16 border-t border-stone-800">
+        <div className="container mx-auto px-6 lg:px-12 grid grid-cols-1 md:grid-cols-4 gap-12">
+          
+          <div className="col-span-1 md:col-span-1">
+            <div className="flex flex-col mb-6">
+              <span className="font-serif text-3xl text-white tracking-widest">
+                Terranova
+              </span>
+              <span className="text-orange-500 text-sm tracking-[0.3em] font-bold">
+                HOTEL
+              </span>
+            </div>
+            <p className="text-sm text-gray-400 mb-6">
+              El refugio perfecto en Saravena, Arauca. Donde la elegancia moderna se encuentra con la belleza del piedemonte llanero.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-white font-semibold uppercase tracking-wider mb-6">Contacto</h4>
+            <ul className="space-y-4 text-sm">
+              <li className="flex items-start gap-3">
+                <MapPin className="text-orange-500 shrink-0" size={18} />
+                <span>Calle Principal #12-34<br/>Barrio Centro, Saravena<br/>Arauca, Colombia</span>
+              </li>
+              <li>
+                <a href="tel:+573000000000" className="hover:text-orange-500 transition-colors">+57 300 000 0000</a>
+              </li>
+              <li>
+                <a href="mailto:reservas@hotelterranova.com" className="hover:text-orange-500 transition-colors">reservas@hotelterranova.com</a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-semibold uppercase tracking-wider mb-6">Enlaces Rápidos</h4>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#el-hotel" className="hover:text-orange-500 transition-colors">Sobre Nosotros</a></li>
+              <li><a href="#habitaciones" className="hover:text-orange-500 transition-colors">Habitaciones</a></li>
+              <li><a href="#servicios" className="hover:text-orange-500 transition-colors">Servicios</a></li>
+              <li><a href="#" className="hover:text-orange-500 transition-colors">Políticas de Cancelación</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-white font-semibold uppercase tracking-wider mb-6">Boletín</h4>
+            <p className="text-sm mb-4">Suscríbete para recibir ofertas exclusivas.</p>
+            <div className="flex">
+              <input type="email" placeholder="Tu correo electrónico" className="bg-stone-900 border border-stone-700 text-white px-4 py-2 w-full focus:outline-none focus:border-orange-500" />
+              <button className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 transition-colors">
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
+
+        </div>
+        
+        <div className="container mx-auto px-6 lg:px-12 mt-16 pt-8 border-t border-stone-800 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center text-gray-500">
+          <p>&copy; {new Date().getFullYear()} Hotel Terranova Saravena. Todos los derechos reservados.</p>
+          <div className="flex gap-4 mt-4 md:mt-0">
+            <a href="#" className="hover:text-white transition-colors">Facebook</a>
+            <a href="#" className="hover:text-white transition-colors">Instagram</a>
+          </div>
+        </div>
+      </footer>
+
+    </div>
+  );
+}
