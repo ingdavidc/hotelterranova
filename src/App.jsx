@@ -83,7 +83,6 @@ export default function App() {
             <Star size={20} className="star-icon" fill="currentColor" />
             <Star size={20} className="star-icon" fill="currentColor" />
             <Star size={20} className="star-icon" fill="currentColor" />
-            <Star size={20} className="star-icon" fill="currentColor" />
           </div>
           <h1 className="hero__title" style={{ whiteSpace: 'pre-line' }}>{heroContent.title}</h1>
           <p className="hero__subtitle">
