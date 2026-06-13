@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Users, MapPin, ChevronRight, Menu, X, Star, Wind, Wifi, Coffee, Car, ChevronLeft } from 'lucide-react';
+import { Calendar, Users, MapPin, ChevronRight, Menu, X, Star, Wind, Wifi, Coffee, Car, ChevronLeft, Facebook, Instagram, MessageCircle } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { useSiteContent } from './context/SiteContentContext';
 
@@ -275,6 +275,21 @@ export default function App() {
           </div>
         </div>
       )}
+      {/* FLOATING SOCIAL BAR */}
+      <div className="floating-social-bar">
+        <a href="https://wa.me/573126909661" target="_blank" rel="noreferrer" className="social-btn whatsapp-btn" title="WhatsApp">
+          <MessageCircle size={24} />
+        </a>
+        <a href="#" target="_blank" rel="noreferrer" className="social-btn facebook-btn" title="Facebook">
+          <Facebook size={24} />
+        </a>
+        <a href="#" target="_blank" rel="noreferrer" className="social-btn instagram-btn" title="Instagram">
+          <Instagram size={24} />
+        </a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Calle+19+No.+10+-+06+Saravena" target="_blank" rel="noreferrer" className="social-btn location-btn" title="Ubicación">
+          <MapPin size={24} />
+        </a>
+      </div>
     </div>
   );
 }
