@@ -142,7 +142,7 @@ export default function App() {
           </div>
           <div className="about__image-wrapper">
             <div className="about__image-accent"></div>
-            <img src="https://images.unsplash.com/photo-1566073171526-87f91766cc19?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Recepción Hotel Terranova" className="about__image" />
+            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Recepción Hotel Terranova" className="about__image" />
           </div>
         </div>
       </section>
