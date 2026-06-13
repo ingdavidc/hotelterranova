@@ -280,7 +280,7 @@ export default function App() {
       )}
       {/* FLOATING SOCIAL BAR */}
       <div className="floating-social-bar">
-        <a href="https://wa.me/573126909661" target="_blank" rel="noreferrer" className="social-btn whatsapp-btn" title="WhatsApp">
+        <a href="https://wa.me/573126906961" target="_blank" rel="noreferrer" className="social-btn whatsapp-btn" title="WhatsApp">
           <MessageCircle size={24} />
         </a>
         <a href="#" target="_blank" rel="noreferrer" className="social-btn facebook-btn" title="Facebook">
