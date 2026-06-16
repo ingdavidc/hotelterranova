@@ -156,6 +156,7 @@ export default function Reception() {
     if (checkoutRoom.inventory?.keys > 0 && !retKeys) return alert('Falta confirmar recepción de las Llaves');
 
     checkOut(checkoutRoom.id);
+    alert(`Check-out exitoso. La habitación ${checkoutRoom.id} pasó a estado "Sucia" automáticamente para su respectivo aseo.`);
     setCheckoutRoom(null);
     setRetTV(false); setRetAC(false); setRetKeys(false);
   };
