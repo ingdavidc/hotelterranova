@@ -109,6 +109,7 @@ export const AdminProvider = ({ children }) => {
       status: 'ocupada', 
       guest: guestName, 
       checkout: checkoutDate,
+      checkinDate: new Date().toISOString(),
       amountPaid: amount,
       paymentMethod: paymentMethod,
       transactionCode: transactionCode,

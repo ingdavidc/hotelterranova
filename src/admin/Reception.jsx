@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAdmin } from './AdminContext';
 import { Printer, Plus, ShoppingCart, CheckCircle, AlertTriangle, Smartphone } from 'lucide-react';
 
@@ -43,6 +43,24 @@ export default function Reception() {
   const [retTV, setRetTV] = useState(false);
   const [retAC, setRetAC] = useState(false);
   const [retKeys, setRetKeys] = useState(false);
+
+  const [coDays, setCoDays] = useState(1);
+  const [coAccommodationTotal, setCoAccommodationTotal] = useState(0);
+  const [coPaymentMethod, setCoPaymentMethod] = useState('Efectivo');
+
+  useEffect(() => {
+    if (checkoutRoom) {
+      let days = 1;
+      if (checkoutRoom.checkinDate) {
+         const diffTime = Math.abs(new Date() - new Date(checkoutRoom.checkinDate));
+         days = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+      }
+      setCoDays(days);
+      const accAmount = parseInt(String(checkoutRoom.amountPaid || '0').replace(/\D/g, '')) || 0;
+      setCoAccommodationTotal(accAmount);
+      setCoPaymentMethod('Efectivo');
+    }
+  }, [checkoutRoom]);
 
   const handleCheckIn = (e) => {
     e.preventDefault();
@@ -192,6 +210,46 @@ export default function Reception() {
                     <span className="font-bold flex items-center gap-1"><AlertTriangle size={14}/> Cobrar consumos pendientes antes de salir</span>
                   </div>
                 )}
+              </div>
+            </div>
+
+            <hr className="my-4"/>
+            <div className="bg-gray-100 p-4 rounded" style={{ backgroundColor: '#f8f9fa', border: '1px solid #ddd' }}>
+              <h3 className="mb-3 font-bold text-lg" style={{ color: '#2f3640' }}>Resumen de Cuenta</h3>
+              <div className="grid-2-cols" style={{ gap: '20px' }}>
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm">Días Hospedado:</span>
+                    <strong className="text-sm">{coDays} días</strong>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm">Valor Alojamiento:</span>
+                    <strong className="text-sm">$ {coAccommodationTotal.toLocaleString()}</strong>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm">Consumos Adicionales:</span>
+                    <strong className="text-sm">$ {checkoutRoom?.extras?.filter(e => !e.isPaid).reduce((sum, e) => sum + (parseInt(String(e.amount).replace(/\D/g, '')) || 0), 0).toLocaleString()}</strong>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div className="flex justify-between mb-2 text-xl font-bold" style={{ color: 'var(--color-primary)', borderBottom: '2px solid var(--color-primary)', paddingBottom: '10px' }}>
+                    <span>Total a Cobrar:</span>
+                    <span>$ {(coAccommodationTotal + checkoutRoom?.extras?.filter(e => !e.isPaid).reduce((sum, e) => sum + (parseInt(String(e.amount).replace(/\D/g, '')) || 0), 0)).toLocaleString()}</span>
+                  </div>
+                  <div className="form-group mb-0">
+                    <label style={{ fontSize: '0.8rem' }}>Método de Pago</label>
+                    <select 
+                      value={coPaymentMethod} 
+                      onChange={e => setCoPaymentMethod(e.target.value)}
+                      style={{ padding: '8px', fontSize: '0.9rem' }}
+                    >
+                      <option value="Efectivo">Efectivo</option>
+                      <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+                      <option value="Tarjeta de Débito">Tarjeta de Débito</option>
+                      <option value="Transferencia">Transferencia</option>
+                    </select>
+                  </div>
+                </div>
               </div>
             </div>
 
