@@ -85,16 +85,7 @@ export default function Reception() {
     }, 100);
   };
 
-  const sendWhatsAppVoucher = (room) => {
-    if (!room.guestDetails || !room.guestDetails.phone) {
-      alert('No hay un número de teléfono registrado para este huésped.');
-      return;
-    }
-    const phone = `${room.guestDetails.phoneCode.replace('+', '')}${room.guestDetails.phone}`;
-    const message = `¡Hola ${room.guest}! Bienvenido al Hotel Terranova. Nos alegra tenerte aquí. Tu habitación es la ${room.id}.\n\nComo beneficio exclusivo, aquí tienes tu PIN para WiFi Ilimitado: *${room.wifiPin}*\n\n¡Disfruta tu estadía!`;
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  };
+
 
   const handleAddExtra = (e) => {
     e.preventDefault();
@@ -535,13 +526,21 @@ export default function Reception() {
                     >
                       <Printer size={14} /> Imprimir
                     </button>
-                    <button 
+                    <a 
+                      href={room.guestDetails?.phone ? `https://wa.me/${room.guestDetails.phoneCode.replace('+', '')}${room.guestDetails.phone.replace(/\\D/g, '')}?text=${encodeURIComponent(`¡Hola ${room.guest}! Bienvenido al Hotel Terranova. Nos alegra tenerte aquí. Tu habitación es la ${room.id}.\n\nComo beneficio exclusivo, aquí tienes tu PIN para WiFi Ilimitado: *${room.wifiPin}*\n\n¡Disfruta tu estadía!`)}` : '#'}
+                      target="_blank"
+                      rel="noreferrer"
                       className="admin-btn"
-                      style={{ flex: '1 1 45%', backgroundColor: '#25D366', color: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', fontSize: '0.75rem', padding: '6px' }}
-                      onClick={() => sendWhatsAppVoucher(room)}
+                      style={{ flex: '1 1 45%', backgroundColor: '#25D366', color: '#fff', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', fontSize: '0.75rem', padding: '6px', textDecoration: 'none' }}
+                      onClick={(e) => {
+                        if (!room.guestDetails || !room.guestDetails.phone) {
+                          e.preventDefault();
+                          alert('No hay un número de teléfono registrado para este huésped.');
+                        }
+                      }}
                     >
                       <Smartphone size={14} /> WhatsApp
-                    </button>
+                    </a>
                     <button 
                       className="admin-btn"
                       style={{ flex: '1 1 45%', backgroundColor: '#fff9e6', color: '#e1b12c', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', fontSize: '0.75rem', padding: '6px', border: '1px solid #e1b12c' }}
