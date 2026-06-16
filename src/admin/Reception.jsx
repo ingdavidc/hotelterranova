@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from './AdminContext';
-import { Printer, Plus, ShoppingCart, CheckCircle, AlertTriangle, Smartphone } from 'lucide-react';
+import { Printer, Plus, ShoppingCart, CheckCircle, AlertTriangle, Smartphone, X } from 'lucide-react';
 
 export default function Reception() {
   const { rooms, checkIn, checkOut, addExtraCharge, inventoryItems } = useAdmin();
@@ -37,6 +37,7 @@ export default function Reception() {
   const [extraDesc, setExtraDesc] = useState('');
   const [extraAmount, setExtraAmount] = useState('');
   const [extraIsPaid, setExtraIsPaid] = useState(false);
+  const [extraCart, setExtraCart] = useState([]);
 
   // Estados para Ventana de Liquidación (Check-Out)
   const [checkoutRoom, setCheckoutRoom] = useState(null);
@@ -105,16 +106,45 @@ export default function Reception() {
 
 
 
-  const handleAddExtra = (e) => {
+  const handleAddExtraToCart = (e) => {
     e.preventDefault();
-    if(extraRoomId && extraDesc && extraAmount) {
-      addExtraCharge(extraRoomId, extraItemId ? parseInt(extraItemId) : null, extraDesc, extraAmount, extraIsPaid);
-      setExtraRoomId(null);
+    if(extraDesc && extraAmount) {
+      setExtraCart([...extraCart, {
+        id: Date.now(),
+        itemId: extraItemId ? parseInt(extraItemId) : null,
+        desc: extraDesc,
+        amount: extraAmount,
+        isPaid: extraIsPaid
+      }]);
       setExtraItemId('');
       setExtraDesc('');
       setExtraAmount('');
+      // Mantener el estado de pago por si quieren agregar más con el mismo estado
+    }
+  };
+
+  const handleRemoveFromCart = (id) => {
+    setExtraCart(extraCart.filter(item => item.id !== id));
+  };
+
+  const handleSaveAllExtras = () => {
+    if (extraRoomId && extraCart.length > 0) {
+      extraCart.forEach(item => {
+        addExtraCharge(extraRoomId, item.itemId, item.desc, item.amount, item.isPaid);
+      });
+      setExtraRoomId(null);
+      setExtraCart([]);
       setExtraIsPaid(false);
     }
+  };
+
+  const handleCancelExtra = () => {
+    setExtraRoomId(null);
+    setExtraCart([]);
+    setExtraItemId('');
+    setExtraDesc('');
+    setExtraAmount('');
+    setExtraIsPaid(false);
   };
 
   const confirmCheckOut = () => {
@@ -266,11 +296,13 @@ export default function Reception() {
       {/* MODAL DE CONSUMOS EXTRAS */}
       {extraRoomId && (
         <div className="admin-modal-overlay">
-          <div className="admin-modal" style={{maxWidth: '400px'}}>
-            <h2>Añadir Consumo: Hab. {extraRoomId}</h2>
-            <form onSubmit={handleAddExtra} className="mt-4">
-              <div className="form-group">
-                <label>Seleccionar Producto/Servicio del Inventario</label>
+          <div className="admin-modal" style={{maxWidth: '500px'}}>
+            <h2>Añadir Consumos: Hab. {extraRoomId}</h2>
+            
+            <form onSubmit={handleAddExtraToCart} className="mt-4" style={{ backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '8px', border: '1px solid #eee' }}>
+              <h4 className="mb-2 text-sm text-gray">1. Agregar producto a la lista</h4>
+              <div className="form-group mb-2">
+                <label style={{ fontSize: '0.8rem' }}>Seleccionar Inventario</label>
                 <select 
                   className="admin-select"
                   value={extraItemId}
@@ -289,7 +321,7 @@ export default function Reception() {
                     }
                   }}
                 >
-                  <option value="">-- Seleccionar o escribir manualmente abajo --</option>
+                  <option value="">-- Manual --</option>
                   {inventoryItems.map(item => (
                     <option key={item.id} value={item.id} disabled={item.type === 'product' && item.stock <= 0}>
                       {item.name} (${item.price.toLocaleString()} COP) {item.type === 'product' ? `[Stock: ${item.stock}]` : ''}
@@ -298,20 +330,23 @@ export default function Reception() {
                 </select>
               </div>
 
-              <div className="form-group">
-                <label>Descripción (Manual)</label>
-                <input type="text" required className="admin-input" placeholder="Ej. Minibar, Restaurante" value={extraDesc} onChange={e=>setExtraDesc(e.target.value)} />
+              <div className="grid-2-cols gap-2 mb-2">
+                <div className="form-group mb-0">
+                  <label style={{ fontSize: '0.8rem' }}>Descripción</label>
+                  <input type="text" required className="admin-input" placeholder="Ej. Minibar" value={extraDesc} onChange={e=>setExtraDesc(e.target.value)} />
+                </div>
+                <div className="form-group mb-0">
+                  <label style={{ fontSize: '0.8rem' }}>Valor (COP)</label>
+                  <input type="text" required className="admin-input" placeholder="$0" value={extraAmount} onChange={e=>setExtraAmount(e.target.value)} />
+                </div>
               </div>
-              <div className="form-group">
-                <label>Valor a Cobrar (COP)</label>
-                <input type="text" required className="admin-input" placeholder="$0" value={extraAmount} onChange={e=>setExtraAmount(e.target.value)} />
-              </div>
-              <div className="form-group" style={{marginTop: '15px'}}>
-                <label>Estado del Pago</label>
-                <div style={{display: 'flex', gap: '15px', marginTop: '5px'}}>
+
+              <div className="form-group mb-2">
+                <label style={{ fontSize: '0.8rem' }}>Estado del Pago</label>
+                <div style={{display: 'flex', gap: '15px', marginTop: '5px', fontSize: '0.85rem'}}>
                   <label style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
                     <input type="radio" name="payStatus" checked={!extraIsPaid} onChange={() => setExtraIsPaid(false)} />
-                    Pendiente (Cargar a habitación)
+                    Cargar a habitación
                   </label>
                   <label style={{display: 'flex', alignItems: 'center', gap: '5px'}}>
                     <input type="radio" name="payStatus" checked={extraIsPaid} onChange={() => setExtraIsPaid(true)} />
@@ -319,11 +354,44 @@ export default function Reception() {
                   </label>
                 </div>
               </div>
-              <div className="flex gap-2 mt-4">
-                <button type="submit" className="admin-btn admin-btn-primary">Añadir Cargo</button>
-                <button type="button" className="admin-btn" style={{backgroundColor: '#ccc'}} onClick={() => setExtraRoomId(null)}>Cancelar</button>
-              </div>
+
+              <button type="submit" className="admin-btn" style={{ width: '100%', marginTop: '10px', backgroundColor: '#e1b12c', color: '#fff' }}>
+                <Plus size={16} style={{display: 'inline', marginRight: '5px'}}/> Añadir a la lista
+              </button>
             </form>
+
+            <div className="mt-4">
+              <h4 className="mb-2 text-sm text-gray">2. Lista de consumos a registrar ({extraCart.length})</h4>
+              {extraCart.length === 0 ? (
+                <p className="text-sm text-gray italic text-center p-4 bg-gray-50 border rounded">No hay productos en la lista</p>
+              ) : (
+                <ul className="text-sm border rounded">
+                  {extraCart.map(item => (
+                    <li key={item.id} className="flex justify-between items-center p-2 border-b">
+                      <div>
+                        <strong>{item.desc}</strong>
+                        <div style={{ fontSize: '0.75rem', color: '#666' }}>
+                          Monto: ${item.amount} | Estado: {item.isPaid ? 'Pagado' : 'Pendiente'}
+                        </div>
+                      </div>
+                      <button onClick={() => handleRemoveFromCart(item.id)} className="text-red hover:underline p-1" style={{color: '#e74c3c'}}><X size={16}/></button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <div className="flex gap-2 mt-4 pt-4 border-t">
+              <button 
+                className="admin-btn" 
+                style={{ flex: 1, backgroundColor: extraCart.length > 0 ? 'var(--color-primary)' : '#ccc' }} 
+                onClick={handleSaveAllExtras}
+                disabled={extraCart.length === 0}
+              >
+                Guardar Todo en Habitación
+              </button>
+              <button className="admin-btn" style={{backgroundColor: '#eee', color: '#333'}} onClick={handleCancelExtra}>Cancelar</button>
+            </div>
           </div>
         </div>
       )}
