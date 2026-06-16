@@ -235,11 +235,7 @@ export default function Reception() {
                     ))}
                   </ul>
                 )}
-                {checkoutRoom.extras?.some(ex => !ex.isPaid) && (
-                  <div className="mt-2 bg-yellow p-2 rounded flex justify-between items-center text-sm" style={{backgroundColor: '#fff9e6', border: '1px solid #e1b12c'}}>
-                    <span className="font-bold flex items-center gap-1"><AlertTriangle size={14}/> Cobrar consumos pendientes antes de salir</span>
-                  </div>
-                )}
+
               </div>
             </div>
 
